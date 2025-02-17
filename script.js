@@ -1,7 +1,7 @@
-import 'dotenv/config';  
-import nodemailer from 'nodemailer';
-import inquirer from 'inquirer';
-import fs from 'fs';
+require('dotenv').config();
+const nodemailer = require('nodemailer');
+const inquirer = require('inquirer');
+const fs = require('fs');
 
 async function sendEmail() {
     try {
@@ -11,20 +11,23 @@ async function sendEmail() {
                 type: 'input',
                 name: 'recipient',
                 message: 'Enter the recipient email:',
-                validate: input => input.includes('@') ? true : 'Enter a valid email'
+                validate: function (input) {
+                    return input.includes('@') ? true : 'Enter a valid email';
+                }
             }
         ]);
-        console.log(process.env.EMAIL);
-        console.log(process.env.PASSWORD);
+
+        console.log('Using email:', process.env.EMAIL);
+        
         // Email transport configuration
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: process.env.EMAIL,      // Your Gmail email address
+                user: process.env.EMAIL, // Your Gmail email address
                 pass: process.env.PASSWORD // Your Gmail app password
             }
         });
-        
+
         // Test report file path
         const reportPath = 'test-report.txt';
 
